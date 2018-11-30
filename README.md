@@ -3,6 +3,7 @@
 이름은 그냥 막 지었음
 *****
 **기능 목록**
+* Pause : 마우스 가두기 on/off. 주 모니터만 가둬짐
 * Ctrl+Shift+Alt+T : 포커스된 창을 항상 위로
 * Ctrl+Shift+Alt+↑/↓ : 포커스된 창을 투명하게, 투명도 조절
 * Ctrl+Shift+Alt+M : 포커스된 창의 최소화 버튼 제거

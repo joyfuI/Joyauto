@@ -2,33 +2,65 @@
 #Persistent	; 실행 유지(ExitApp로 종료)
 #SingleInstance force	; 중복실행시 다시 실행
 
-volume := 5
+volume := 5	; 디폴트 볼륨
+
+ClipCursor(x1, y1, x2, y2)	; 마우스 가두는 함수
+{
+	VarSetCapacity(rect, 16, 0)
+	args := x1 . "|" . y1 . "|" . x2 . "|" . y2
+	Loop, Parse, args, |
+		NumPut(A_LoopField, &rect, (a_index - 1) * 4)
+	DllCall("ClipCursor", "Str", rect)
+}
 
 Menu, Tray, NoStandard	; 트레이 기본메뉴 제거
+Menu, Tray, Add, 마우스 가두기, Toggle
 Menu, Tray, Add, 부팅시 자동 실행, Autorun
-Menu, Tray, Add, 종료, Close	; 종료 메뉴 추가
+Menu, Tray, Add, 종료, Close
+Menu, Tray, Default, 마우스 가두기	; 트레이 아이콘 클릭 시 동작할 기본메뉴
+Menu, Tray, Click, 1	; 트레이 아이콘을 한번만 눌러도 기본메뉴 작동
 
-RegRead, reg, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, 오핫매크로	; 자동실행 레지스트리가 있는지 확인
-If ErrorLevel = 0	; 레지스트리가 있고
-	If reg = %A_ScriptFullPath%	; 그 값이 이 파일이라면
+RegRead, reg, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, Joyauto	; 자동실행 레지스트리가 있는지 확인
+If (ErrorLevel = 0)	; 레지스트리가 있고
+	If (reg = A_ScriptFullPath)	; 그 값이 이 파일이라면
 		Menu, Tray, Check, 부팅시 자동 실행	; 트레이 메뉴 체크
 
+Hotkey, Pause, Toggle	; Pause 키에 마우스 가두기 단축키 지정
 Progress, b p%volume% r0-100 w200 Hide zh15 fs10 ws700, %volume%
-SoundSet, %volume%	; 시작시 기본 볼륨
 
+SoundSet, %volume%	; 시작시 기본 볼륨
 RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced, ShowSuperHidden, 0	; "보호된 운영 체제 파일 숨기기(권장)" 체크
+Return
+
+Toggle:
+Menu, Tray, ToggleCheck, 마우스 가두기
+If (toggle)
+{
+	SetTimer, Cursor, off
+	DllCall("ClipCursor", "Int", 0)
+	toggle := false
+}
+Else
+{
+	SetTimer, Cursor, on
+	toggle := true
+}
+Return
+
+Cursor:
+ClipCursor(0, 0, A_ScreenWidth, A_ScreenHeight)	; 해상도 크기만큼 마우스 가두기
 Return
 
 Autorun:
 Menu, Tray, ToggleCheck, 부팅시 자동 실행
-RegRead, reg, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, 오핫매크로	; 자동실행 레지스트리가 있는지 확인
-if ErrorLevel = 0	; 레지스트리가 있고
-	if reg = %A_ScriptFullPath%	; 그 값이 이 파일이라면
+RegRead, reg, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, Joyauto	; 자동실행 레지스트리가 있는지 확인
+if (ErrorLevel = 0)	; 레지스트리가 있고
+	if (reg = A_ScriptFullPath)	; 그 값이 이 파일이라면
 	{
-		RegDelete, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, 오핫매크로	; 레지스트리 삭제
+		RegDelete, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, Joyauto	; 레지스트리 삭제
 		Return
 	}
-RegWrite, REG_SZ, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, 오핫매크로, %A_ScriptFullPath%	; 레지스트리 생성
+RegWrite, REG_SZ, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, Joyauto, %A_ScriptFullPath%	; 레지스트리 생성
 Return
 
 Close:
@@ -39,26 +71,26 @@ WinSet, AlwaysOnTop, toggle, A	; 포커스된 창을 항상 위로
 Return
 
 ^+!Up::	; 컨트롤 + 시프트 + 알트 + ↑
-WinGet, 투명도, Transparent, A	; 투명도 알아내기
-If 투명도 = 
+WinGet, trans, Transparent, A	; 투명도 알아내기
+If (!trans)
 	Return
-투명도 := 투명도 + 10	; 투명도 간격 10
-If 투명도 >= 255	; 투명도 0 ~ 255
+trans += 10	; 투명도 간격 10
+If (trans >= 255)	; 투명도 0 ~ 255
 {
 	WinSet, Transparent, off, A	; 투명창 끄기. 투명도를 255로 지정해도 불투명하나 그러면 투명창으로 인식하기 때문에 성능이 하락함.
 	Return
 }
-WinSet, Transparent, %투명도%, A	; 포커스된 창을 투명하게
+WinSet, Transparent, %trans%, A	; 포커스된 창을 투명하게
 Return
 
 ^+!Down::	; 컨트롤 + 시프트 + 알트 + ↓
-WinGet, 투명도, Transparent, A
-If 투명도 = 
-	투명도 := 255
-투명도 := 투명도 - 10
-If 투명도 <= 0
+WinGet, trans, Transparent, A
+If (!trans)
+	trans := 255
+trans -= 10
+If (trans <= 0)
 	Return
-WinSet, Transparent, %투명도%, A
+WinSet, Transparent, %trans%, A
 Return
 
 ^+!m::	; 컨트롤 + 시프트 + 알트 + M
@@ -85,7 +117,7 @@ SoundGet, volume
 volume := Round(volume)
 Progress, %volume%, %volume%
 Progress, Show
-SetTimer, volume, -1000
+SetTimer, ProgressHide, -1000
 Return
 
 #WheelDown::	; 윈도우키 + 휠다운
@@ -94,7 +126,11 @@ SoundGet, volume
 volume := Round(volume)
 Progress, %volume%, %volume%
 Progress, Show
-SetTimer, volume, -1000
+SetTimer, ProgressHide, -1000
+Return
+
+ProgressHide:
+Progress, b p%volume% r0-100 w200 Hide zh15 fs10 ws700, %volume%
 Return
 
 ^+v::	; 컨트롤 + 시프트 + V
@@ -104,8 +140,4 @@ Send, ^v	; 붙여넣기
 Sleep, 100	; 딜레이 안주면 이상하게 안됨..
 clipboard := clip	; 원래 내용 복구
 clip := ""	; 메모리 해제
-Return
-
-volume:
-Progress, b p%volume% r0-100 w200 Hide zh15 fs10 ws700, %volume%
 Return
