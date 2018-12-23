@@ -2,8 +2,6 @@
 #Persistent	; 실행 유지(ExitApp로 종료)
 #SingleInstance force	; 중복실행시 다시 실행
 
-volume := 5	; 디폴트 볼륨
-
 ClipCursor(x1, y1, x2, y2)	; 마우스 가두는 함수
 {
 	VarSetCapacity(rect, 16, 0)
@@ -27,9 +25,6 @@ If (ErrorLevel = 0)	; 레지스트리가 있고
 
 Hotkey, Pause, Toggle	; Pause 키에 마우스 가두기 단축키 지정
 Progress, b p%volume% r0-100 w200 Hide zh15 fs10 ws700, %volume%
-
-SoundSet, %volume%	; 시작시 기본 볼륨
-RegWrite, REG_DWORD, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced, ShowSuperHidden, 0	; "보호된 운영 체제 파일 숨기기(권장)" 체크
 Return
 
 Toggle:
