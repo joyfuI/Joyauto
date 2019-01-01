@@ -34,11 +34,13 @@ If (toggle)
 	SetTimer, Cursor, off
 	DllCall("ClipCursor", "Int", 0)
 	toggle := false
+	TrayTip, Joyauto, 마우스 가두기 off
 }
 Else
 {
 	SetTimer, Cursor, on
 	toggle := true
+	TrayTip, Joyauto, 마우스 가두기 on
 }
 Return
 
