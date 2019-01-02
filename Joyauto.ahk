@@ -31,16 +31,14 @@ Toggle:
 Menu, Tray, ToggleCheck, 마우스 가두기
 If (toggle)
 {
-	SetTimer, Cursor, off
+	SetTimer, Cursor, Off
 	DllCall("ClipCursor", "Int", 0)
 	toggle := false
-	TrayTip, Joyauto, 마우스 가두기 off
 }
 Else
 {
-	SetTimer, Cursor, on
+	SetTimer, Cursor, On
 	toggle := true
-	TrayTip, Joyauto, 마우스 가두기 on
 }
 Return
 
