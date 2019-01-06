@@ -9,6 +9,7 @@ ClipCursor(x1, y1, x2, y2)	; 마우스 가두는 함수
 	Loop, Parse, args, |
 		NumPut(A_LoopField, &rect, (a_index - 1) * 4)
 	DllCall("ClipCursor", "Str", rect)
+	Return
 }
 
 Menu, Tray, NoStandard	; 트레이 기본메뉴 제거
@@ -99,12 +100,12 @@ Return
 +WheelUp::	; 시프트 + 휠업
 ControlGetFocus, fcontrol, A
 SendMessage, 0x114, 0, 0, %fcontrol%, A	; 왼쪽으로 스크롤
-return
+Return
 
 +WheelDown::	; 시프트 + 휠다운
 ControlGetFocus, fcontrol, A
 SendMessage, 0x114, 1, 0, %fcontrol%, A	; 오른쪽으로 스크롤
-return
+Return
 
 #WheelUp::	; 윈도우키 + 휠업
 SoundSet, +5
@@ -136,3 +137,9 @@ Sleep, 100	; 딜레이 안주면 이상하게 안됨..
 clipboard := clip	; 원래 내용 복구
 clip := ""	; 메모리 해제
 Return
+
+::\->::→
+::\<-::←
+::\up::↑
+::\down::↓
+::\<->::↔
