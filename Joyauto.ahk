@@ -138,6 +138,7 @@ clipboard := clip	; 원래 내용 복구
 clip := ""	; 메모리 해제
 Return
 
+#Hotstring *
 ::\->::→
 ::\<-::←
 ::\up::↑
