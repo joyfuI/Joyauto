@@ -12,6 +12,12 @@ ClipCursor(x1, y1, x2, y2)	; 마우스 가두는 함수
 	Return
 }
 
+SwitchSound(device)
+{
+	Run, "nircmd.exe" setdefaultsounddevice "%device%", , Hide
+	Return
+}
+
 Menu, Tray, NoStandard	; 트레이 기본메뉴 제거
 Menu, Tray, Add, 마우스 가두기, Toggle
 Menu, Tray, Add, 부팅 시 자동 실행, Autorun
@@ -26,6 +32,8 @@ If (ErrorLevel = 0)	; 레지스트리가 있고
 
 Hotkey, Pause, Toggle	; Pause 키에 마우스 가두기 단축키 지정
 Progress, b p%volume% r0-100 w200 Hide zh15 fs10 ws700, %volume%
+
+Run, "nircmd.exe" setdefaultsounddevice "헤드셋 이어폰", , Hide	; 기본 재생장치 설정
 Return
 
 Toggle:
@@ -136,6 +144,18 @@ Send, ^v	; 붙여넣기
 Sleep, 100	; 딜레이 안주면 이상하게 안됨..
 clipboard := clip	; 원래 내용 복구
 clip := ""	; 메모리 해제
+Return
+
+^+!1::	; 컨트롤 + 시프트 + 알트 + 1
+SwitchSound("헤드셋 이어폰")	; 헤드셋
+Return
+
+^+!2::	; 컨트롤 + 시프트 + 알트 + 2
+SwitchSound("2477W1M")	; 모니터
+Return
+
+^+!3::	; 컨트롤 + 시프트 + 알트 + 3
+SwitchSound("스피커")	; 이어폰(전면잭)
 Return
 
 #Hotstring *?
