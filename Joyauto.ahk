@@ -18,6 +18,8 @@ SwitchSound(device)
 	Return
 }
 
+SetWorkingDir, %A_ScriptDir%	; 작업 디렉토리를 스크립트가 있는 폴더로 이동. 따로 지정 안해놓으면 자동 실행으로 시작 시 작업 디렉토리가 다른 곳으로 설정돼 오류가 남
+
 Menu, Tray, NoStandard	; 트레이 기본메뉴 제거
 Menu, Tray, Add, 마우스 가두기, Toggle
 Menu, Tray, Add, 부팅 시 자동 실행, Autorun
