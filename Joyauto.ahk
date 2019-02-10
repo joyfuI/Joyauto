@@ -14,7 +14,11 @@ ClipCursor(x1, y1, x2, y2)	; 마우스 가두는 함수
 
 SwitchSound(device)
 {
-	Run, "nircmd.exe" setdefaultsounddevice "%device%", , Hide
+	TrayTip	; 이전 메시지는 지우고
+	RunWait, "nircmd.exe" setdefaultsounddevice "%device%", , Hide
+	SoundGet, volume
+	volume := Round(volume)
+	TrayTip, , %device% : %volume%
 	Return
 }
 
