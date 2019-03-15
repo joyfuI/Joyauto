@@ -64,8 +64,8 @@ Return
 Autorun:
 Menu, Tray, ToggleCheck, 부팅 시 자동 실행
 RegRead, reg, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, Joyauto	; 자동실행 레지스트리가 있는지 확인
-if (ErrorLevel = 0)	; 레지스트리가 있고
-	if (reg = A_ScriptFullPath)	; 그 값이 이 파일이라면
+If (ErrorLevel = 0)	; 레지스트리가 있고
+	If (reg = A_ScriptFullPath)	; 그 값이 이 파일이라면
 	{
 		RegDelete, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, Joyauto	; 레지스트리 삭제
 		Return
