@@ -48,13 +48,12 @@ If (toggle)
 {
 	SetTimer, Cursor, Off
 	DllCall("ClipCursor", "Int", 0)
-	toggle := false
 }
 Else
 {
 	SetTimer, Cursor, On
-	toggle := true
 }
+toggle := !toggle
 Return
 
 Cursor:
