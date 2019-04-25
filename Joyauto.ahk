@@ -25,7 +25,9 @@ SwitchSound(device)
 SetWorkingDir, %A_ScriptDir%	; 작업 디렉토리를 스크립트가 있는 폴더로 이동. 따로 지정 안해놓으면 자동 실행으로 시작 시 작업 디렉토리가 다른 곳으로 설정돼 오류가 남
 
 Menu, Tray, NoStandard	; 트레이 기본메뉴 제거
-Menu, Tray, Add, 마우스 가두기, Toggle
+Menu, Tray, Add, 마우스 가두기, Mouse
+Menu, Tray, Add, 노트북 한영키, Laptop
+Menu, Tray, Add
 Menu, Tray, Add, 부팅 시 자동 실행, Autorun
 Menu, Tray, Add, 종료, Close
 Menu, Tray, Default, 마우스 가두기	; 트레이 아이콘 클릭 시 동작할 기본메뉴
@@ -36,15 +38,15 @@ If (ErrorLevel = 0)	; 레지스트리가 있고
 	If (reg = A_ScriptFullPath)	; 그 값이 이 파일이라면
 		Menu, Tray, Check, 부팅 시 자동 실행	; 트레이 메뉴 체크
 
-Hotkey, Pause, Toggle	; Pause 키에 마우스 가두기 단축키 지정
+Hotkey, Pause, Mouse	; Pause 키에 마우스 가두기 단축키 지정
 Progress, b p%volume% r0-100 w200 Hide zh15 fs10 ws700, %volume%
 
 Run, "nircmd.exe" setdefaultsounddevice "헤드셋 이어폰", , Hide	; 기본 재생장치 설정
 Return
 
-Toggle:
+Mouse:
 Menu, Tray, ToggleCheck, 마우스 가두기
-If (toggle)
+If (toggle1)
 {
 	SetTimer, Cursor, Off
 	DllCall("ClipCursor", "Int", 0)
@@ -53,11 +55,28 @@ Else
 {
 	SetTimer, Cursor, On
 }
-toggle := !toggle
+toggle1 := !toggle1
 Return
 
 Cursor:
 ClipCursor(0, 0, A_ScreenWidth, A_ScreenHeight)	; 해상도 크기만큼 마우스 가두기
+Return
+
+Laptop:
+Menu, Tray, ToggleCheck, 노트북 한영키
+If (toggle2)
+{
+	Hotkey, RAlt, Ralt, Off
+}
+Else
+{
+	Hotkey, RAlt, Ralt, On
+}
+toggle2 := !toggle2
+Return
+
+Ralt:
+Send, {vk15sc138}
 Return
 
 Autorun:
