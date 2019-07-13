@@ -39,7 +39,7 @@ If (ErrorLevel = 0)	; 레지스트리가 있고
 		Menu, Tray, Check, 부팅 시 자동 실행	; 트레이 메뉴 체크
 
 Hotkey, Pause, Mouse	; Pause 키에 마우스 가두기 단축키 지정
-Progress, b p%volume% r0-100 w200 Hide zh15 fs10 ws700, %volume%
+Progress, b p0 r0-100 w200 Hide zh15 fs10 ws700, 0
 
 Run, "nircmd.exe" setdefaultsounddevice "헤드셋 이어폰", , Hide	; 기본 재생장치 설정
 Return
