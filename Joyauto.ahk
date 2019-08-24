@@ -94,11 +94,11 @@ Return
 Close:
 ExitApp
 
-^+!t::	; 컨트롤 + 시프트 + 알트 + T
+^#t::	; 컨트롤 + 윈도우키 + T
 WinSet, AlwaysOnTop, toggle, A	; 포커스된 창을 항상 위로
 Return
 
-^+!Up::	; 컨트롤 + 시프트 + 알트 + ↑
+^#Up::	; 컨트롤 + 윈도우키 + ↑
 WinGet, trans, Transparent, A	; 투명도 알아내기
 If (!trans)
 	Return
@@ -111,7 +111,7 @@ If (trans >= 255)	; 투명도 0 ~ 255
 WinSet, Transparent, %trans%, A	; 포커스된 창을 투명하게
 Return
 
-^+!Down::	; 컨트롤 + 시프트 + 알트 + ↓
+^#Down::	; 컨트롤 + 윈도우키 + ↓
 WinGet, trans, Transparent, A
 If (!trans)
 	trans := 255
@@ -121,11 +121,11 @@ If (trans <= 0)
 WinSet, Transparent, %trans%, A
 Return
 
-^+!m::	; 컨트롤 + 시프트 + 알트 + M
+^#m::	; 컨트롤 + 윈도우키 + M
 WinSet, Style, ^0x00020000, A	; 포커스된 창의 최소화 버튼 제거
 Return
 
-^+!s::	; 컨트롤 + 시프트 + 알트 + S
+^#s::	; 컨트롤 + 윈도우키 + S
 WinSet, Style, ^0x00040000, A	; 포커스된 창의 굵은 테두리 제거. 즉, 창 크기 변경 불가
 Return
 
