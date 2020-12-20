@@ -197,6 +197,20 @@ SwitchSound("스피커")
 Return
 
 
+; 컨트롤 + 시프트 + 스페이스
+^!Space::
+clip := ClipboardAll        ; 클립보드 내용 보관
+Send, ^c
+If (IME_CHECK("A") == 0)    ; IME가 영문이면 한글로 변경
+    Send, {vk15sc138}
+Send, %clipboard%
+Sleep, 100
+clipboard := clip           ; 원래 클립보드 내용 복구
+clip := ""                  ; 메모리 해제
+Return
+
+
+; 핫스트링
 #Hotstring *?
 ::\->::→
 ::\<-::←
@@ -216,6 +230,7 @@ ClipCursor(x1, y1, x2, y2)
     DllCall("ClipCursor", "Str", rect)
 }
 
+; 출력 장치 변경 함수
 SwitchSound(device)
 {
     TrayTip     ; 이전 메시지는 지우고
@@ -223,4 +238,17 @@ SwitchSound(device)
     SoundGet, volume
     volume := Round(volume)
     TrayTip, , %device% : %volume%
+}
+
+; IME 상태 알아내는 함수. 영어면 0을 반환
+IME_CHECK(winTitle)
+{
+    WinGet, hWnd, ID, %winTitle%
+    defaultIMEWnd := DllCall("imm32\ImmGetDefaultIMEWnd", Uint, hWnd, Uint)
+    detectSave := A_DetectHiddenWindows
+    DetectHiddenWindows, ON
+    SendMessage, 0x283, 0x005, "", , ahk_id %defaultIMEWnd%
+    If (detectSave != A_DetectHiddenWindows)
+        DetectHiddenWindows, %detectSave%
+    Return ErrorLevel
 }
