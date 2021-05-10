@@ -8,6 +8,7 @@ SetWorkingDir, %A_ScriptDir%
 Menu, Tray, NoStandard
 Menu, Tray, Add, 마우스 가두기, Mouse
 Menu, Tray, Add, 노트북 한영키, Laptop
+Menu, Tray, Add, 스팀 선호도 설정, Steam
 Menu, Tray, Add
 Menu, Tray, Add, 부팅 시 자동 실행, Autorun
 Menu, Tray, Add, 종료, Close
@@ -58,6 +59,11 @@ Return
 
 Ralt:
 Send, {vk15sc138}
+Return
+
+
+Steam:
+Run, "nircmd.exe" setprocessaffinity "C:\Program Files (x86)\Steam\steam.exe" 0 1 2 3, , Hide
 Return
 
 
