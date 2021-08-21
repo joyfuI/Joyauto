@@ -114,20 +114,6 @@ WinSet, Transparent, %trans%, A
 Return
 
 
-; 컨트롤 + 윈도우키 + M
-^#m::
-; 포커스된 창의 최소화 버튼 제거
-WinSet, Style, ^0x00020000, A
-Return
-
-
-; 컨트롤 + 윈도우키 + S
-^#s::
-; 포커스된 창의 굵은 테두리 제거. 즉, 창 크기 변경 불가
-WinSet, Style, ^0x00040000, A
-Return
-
-
 ; 시프트 + 휠업
 +WheelUp::
 ; 왼쪽으로 스크롤
