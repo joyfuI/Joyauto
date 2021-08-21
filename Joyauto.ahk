@@ -172,7 +172,7 @@ Return
 
 
 ; 컨트롤 + 시프트 + V
-^+!v::
+^+v::
 clipboard := clipboard  ; 클립보드에서 서식 제거
 Send, ^v
 Sleep, 100              ; 딜레이 안주면 이상하게 안됨..
@@ -181,8 +181,8 @@ clip := ""              ; 메모리 해제
 Return
 
 
-; 컨트롤 + 시프트 + 알트 + V
-^+v::
+; 컨트롤 + 알트 + V
+^!v::
 Send, %clipboard%
 Return
 
@@ -208,7 +208,7 @@ SwitchSound("스피커")
 Return
 
 
-; 컨트롤 + 시프트 + 스페이스
+; 컨트롤 + 알트 + 스페이스
 ^!Space::
 clip := ClipboardAll        ; 클립보드 내용 보관
 Send, ^c
