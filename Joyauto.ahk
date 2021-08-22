@@ -159,6 +159,7 @@ Return
 
 ; 컨트롤 + 시프트 + V
 ^+v::
+clip := ClipboardAll    ; 클립보드 내용 보관
 clipboard := clipboard  ; 클립보드에서 서식 제거
 Send, ^v
 Sleep, 100              ; 딜레이 안주면 이상하게 안됨..
