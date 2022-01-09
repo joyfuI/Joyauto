@@ -4,7 +4,6 @@
 
 ## 단축키 목록
 * **Pause** : 마우스 가두기 on/off. 주 모니터로 가둬짐
-* **Ctrl+윈도우키+T** : 포커스된 창을 항상 위로
 * **Ctrl+윈도우키+↑/↓** : 포커스된 창을 투명하게, 투명도 조절
 * **Shift+WheelUp/WheelDoWn** : 좌우 스크롤
 * **윈도우키+WheelUp/WheelDoWn** : 볼륨 조절

@@ -82,13 +82,6 @@ Close:
 ExitApp
 
 
-; 컨트롤 + 윈도우키 + T
-^#t::
-; 포커스된 창을 항상 위로
-WinSet, AlwaysOnTop, toggle, A
-Return
-
-
 ; 컨트롤 + 윈도우키 + ↑
 ^#Up::
 WinGet, trans, Transparent, A           ; 투명도 알아내기
