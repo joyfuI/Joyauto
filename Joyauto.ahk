@@ -24,7 +24,7 @@ Hotkey, Pause, Mouse ; Pause 키에 마우스 가두기 단축키 지정
 Progress, b p0 r0-100 w200 Hide zh15 fs10 ws700, 0
 
 ; 기본 재생장치 설정
-Run, "nircmd.exe" setdefaultsounddevice "헤드셋 이어폰", , Hide
+Run, "nircmd.exe" setdefaultsounddevice "스피커", , Hide
 Return
 
 Mouse:
@@ -153,7 +153,7 @@ Return
 ; 컨트롤 + 시프트 + 알트 + 1
 ^+!1::
     ; 헤드셋
-    SwitchSound("헤드셋 이어폰")
+    SwitchSound("스피커")
 Return
 
 ; 컨트롤 + 시프트 + 알트 + 2
