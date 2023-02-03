@@ -1,225 +1,227 @@
-#NoEnv
-#Persistent
-#SingleInstance force ; Áßº¹ ½ÇÇà ½Ã ´Ù½Ã ½ÇÇà
+#SingleInstance Force ; ì¤‘ë³µ ì‹¤í–‰ ì‹œ ë‹¤ì‹œ ì‹¤í–‰
+Persistent
 
-; ÀÛ¾÷ µğ·ºÅä¸®¸¦ ½ºÅ©¸³Æ®°¡ ÀÖ´Â Æú´õ·Î ÀÌµ¿. µû·Î ÁöÁ¤ ¾ÈÇØ³õÀ¸¸é ÀÚµ¿ ½ÇÇàÀ¸·Î ½ÃÀÛ ½Ã ÀÛ¾÷ µğ·ºÅä¸®°¡ ´Ù¸¥ °÷À¸·Î ¼³Á¤µÅ ¿À·ù°¡ ³²
-SetWorkingDir, %A_ScriptDir%
+; ì‘ì—… ë””ë ‰í† ë¦¬ë¥¼ ìŠ¤í¬ë¦½íŠ¸ê°€ ìˆëŠ” í´ë”ë¡œ ì´ë™. ë”°ë¡œ ì§€ì • ì•ˆí•´ë†“ìœ¼ë©´ ìë™ ì‹¤í–‰ìœ¼ë¡œ ì‹œì‘ ì‹œ ì‘ì—… ë””ë ‰í† ë¦¬ê°€ ë‹¤ë¥¸ ê³³ìœ¼ë¡œ ì„¤ì •ë¼ ì˜¤ë¥˜ê°€ ë‚¨
+SetWorkingDir A_ScriptDir
 
-Menu, Tray, NoStandard
-Menu, Tray, Add, ¸¶¿ì½º °¡µÎ±â, Mouse
-Menu, Tray, Add, ³ëÆ®ºÏ ÇÑ¿µÅ°, Laptop
-Menu, Tray, Add, ½ºÆÀ ¼±È£µµ ¼³Á¤, Steam
-Menu, Tray, Add
-Menu, Tray, Add, ºÎÆÃ ½Ã ÀÚµ¿ ½ÇÇà, Autorun
-Menu, Tray, Add, Á¾·á, Close
-Menu, Tray, Default, ¸¶¿ì½º °¡µÎ±â
-Menu, Tray, Click, 1
+tray := A_TrayMenu
+tray.delete()
+tray.add("ë§ˆìš°ìŠ¤ ê°€ë‘ê¸°", Mouse)
+tray.add("ë…¸íŠ¸ë¶ í•œì˜í‚¤", Laptop)
+tray.add("ìŠ¤íŒ€ ì„ í˜¸ë„ ì„¤ì •", Steam)
+tray.add()
+tray.add("ë¶€íŒ… ì‹œ ìë™ ì‹¤í–‰", Autorun)
+tray.add("ì¢…ë£Œ", Close)
+tray.Default := "ë§ˆìš°ìŠ¤ ê°€ë‘ê¸°"
+tray.ClickCount := 1
 
-; ÀÚµ¿½ÇÇà ·¹Áö½ºÆ®¸®°¡ ÀÖ´ÂÁö È®ÀÎ
-RegRead, reg, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, Joyauto
-If (ErrorLevel = 0 && reg = A_ScriptFullPath)
-    Menu, Tray, Check, ºÎÆÃ ½Ã ÀÚµ¿ ½ÇÇà
-
-Hotkey, Pause, Mouse ; Pause Å°¿¡ ¸¶¿ì½º °¡µÎ±â ´ÜÃàÅ° ÁöÁ¤
-Progress, b p0 r0-100 w200 Hide zh15 fs10 ws700, 0
-
-; ±âº» Àç»ıÀåÄ¡ ¼³Á¤
-Run, "nircmd.exe" setdefaultsounddevice "½ºÇÇÄ¿", , Hide
-Return
-
-Mouse:
-    Menu, Tray, ToggleCheck, ¸¶¿ì½º °¡µÎ±â
-    If (toggle1)
-    {
-        SetTimer, Cursor, Off
-        DllCall("ClipCursor", "Int", 0)
+Try {
+    ; ìë™ì‹¤í–‰ ë ˆì§€ìŠ¤íŠ¸ë¦¬ê°€ ìˆëŠ”ì§€ í™•ì¸
+    reg := RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run", "Joyauto")
+    If (reg == A_ScriptFullPath) {
+        tray.Check("ë¶€íŒ… ì‹œ ìë™ ì‹¤í–‰")
     }
-    Else
-        SetTimer, Cursor, On
-    toggle1 := !toggle1
+}
+
+; ê¸°ë³¸ ì¬ìƒì¥ì¹˜ ì„¤ì •
+Run '"nircmd.exe" setdefaultsounddevice "ìŠ¤í”¼ì»¤"', , "Hide"
 Return
 
-Cursor:
-    ; ÇØ»óµµ Å©±â¸¸Å­ ¸¶¿ì½º °¡µÎ±â
+Mouse(*) {
+    static toggle := False
+    tray.ToggleCheck("ë§ˆìš°ìŠ¤ ê°€ë‘ê¸°")
+    If (toggle) {
+        SetTimer Cursor, 0
+        DllCall("ClipCursor", "Int", 0)
+    } Else {
+        SetTimer Cursor
+    }
+    toggle := !toggle
+}
+
+Cursor(*) {
+    ; í•´ìƒë„ í¬ê¸°ë§Œí¼ ë§ˆìš°ìŠ¤ ê°€ë‘ê¸°
     ClipCursor(0, 0, A_ScreenWidth, A_ScreenHeight)
-Return
+}
 
-Laptop:
-    Menu, Tray, ToggleCheck, ³ëÆ®ºÏ ÇÑ¿µÅ°
-    If (toggle2)
-        Hotkey, RAlt, Ralt, Off
-    Else
-        Hotkey, RAlt, Ralt, On
-    toggle2 := !toggle2
-Return
+Laptop(*) {
+    static toggle := False
+    tray.ToggleCheck("ë…¸íŠ¸ë¶ í•œì˜í‚¤")
+    If (toggle) {
+        Hotkey "RAlt", Ralt, "Off"
+    } Else {
+        Hotkey "RAlt", Ralt, "On"
+    }
+    toggle := !toggle
+}
 
-Ralt:
-    Send, {vk15sc138}
-Return
+Ralt(*) {
+    Send "{vk15sc138}"
+}
 
-Steam:
-    Run, "nircmd.exe" setprocessaffinity "C:\Program Files (x86)\Steam\steam.exe" 0 1 2 3, , Hide
-Return
+Steam(*) {
+    Run '"nircmd.exe" setprocessaffinity "C:\Program Files (x86)\Steam\steam.exe" 0 1 2 3', , "Hide"
+}
 
-Autorun:
-    Menu, Tray, ToggleCheck, ºÎÆÃ ½Ã ÀÚµ¿ ½ÇÇà
-    ; ÀÚµ¿½ÇÇà ·¹Áö½ºÆ®¸®°¡ ÀÖ´ÂÁö È®ÀÎ
-    RegRead, reg, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, Joyauto
-    If (ErrorLevel = 0 && reg = A_ScriptFullPath)
-        RegDelete, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, Joyauto
-    Else
-        RegWrite, REG_SZ, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Run, Joyauto, %A_ScriptFullPath%
-Return
+Autorun(*) {
+    tray.ToggleCheck("ë¶€íŒ… ì‹œ ìë™ ì‹¤í–‰")
+    Try {
+        ; ìë™ì‹¤í–‰ ë ˆì§€ìŠ¤íŠ¸ë¦¬ê°€ ìˆëŠ”ì§€ í™•ì¸
+        reg := RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run", "Joyauto")
+        If (reg == A_ScriptFullPath) {
+            RegDelete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run", "Joyauto"
+        } Else {
+            RegWrite A_ScriptFullPath, "REG_SZ", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run", "Joyauto"
+        }
+    } Catch {
+        RegWrite A_ScriptFullPath, "REG_SZ", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run", "Joyauto"
+    }
+}
 
-Close:
-ExitApp
+Close(*) {
+    ExitApp
+}
 
-; ÄÁÆ®·Ñ + À©µµ¿ìÅ° + ¡è
-^#Up::
-    WinGet, trans, Transparent, A ; Åõ¸íµµ ¾Ë¾Æ³»±â
-    If (!trans)
+; Pause í‚¤ì— ë§ˆìš°ìŠ¤ ê°€ë‘ê¸° ë‹¨ì¶•í‚¤ ì§€ì •
+Pause:: Mouse
+
+; ì»¨íŠ¸ë¡¤ + ìœˆë„ìš°í‚¤ + â†‘
+^#Up:: {
+    trans := WinGetTransparent("A") ; íˆ¬ëª…ë„ ì•Œì•„ë‚´ê¸°
+    If (!trans) {
         Return
+    }
     trans += 10
-    If (trans >= 255)
-        WinSet, Transparent, off, A ; Åõ¸íÃ¢ ²ô±â. Åõ¸íµµ¸¦ 255·Î ÁöÁ¤ÇØµµ ºÒÅõ¸íÇÏ³ª ±×·¯¸é Åõ¸íÃ¢À¸·Î ÀÎ½ÄÇÏ±â ¶§¹®¿¡ ¼º´ÉÀÌ ÇÏ¶ôÇÔ.
-    Else
-        WinSet, Transparent, %trans%, A ; Æ÷Ä¿½ºµÈ Ã¢À» Åõ¸íÇÏ°Ô
-Return
+    If (trans >= 255) {
+        WinSetTransparent "Off", "A" ; íˆ¬ëª…ì°½ ë„ê¸°. íˆ¬ëª…ë„ë¥¼ 255ë¡œ ì§€ì •í•´ë„ ë¶ˆíˆ¬ëª…í•˜ë‚˜ ê·¸ëŸ¬ë©´ íˆ¬ëª…ì°½ìœ¼ë¡œ ì¸ì‹í•˜ê¸° ë•Œë¬¸ì— ì„±ëŠ¥ì´ í•˜ë½í•¨.
+    } Else {
+        WinSetTransparent trans, "A" ; í¬ì»¤ìŠ¤ëœ ì°½ì„ íˆ¬ëª…í•˜ê²Œ
+    }
+}
 
-; ÄÁÆ®·Ñ + À©µµ¿ìÅ° + ¡é
-^#Down::
-    WinGet, trans, Transparent, A
-    If (!trans)
+; ì»¨íŠ¸ë¡¤ + ìœˆë„ìš°í‚¤ + â†“
+^#Down:: {
+    trans := WinGetTransparent("A")
+    If (!trans) {
         trans := 255
+    }
     trans -= 10
-    If (trans <= 0)
+    If (trans <= 0) {
         Return
-    WinSet, Transparent, %trans%, A
-Return
+    }
+    WinSetTransparent trans, "A"
+}
 
-; ½ÃÇÁÆ® + ÈÙ¾÷
-+WheelUp::
-    ; ¿ŞÂÊÀ¸·Î ½ºÅ©·Ñ
-    ControlGetFocus, fcontrol, A
-    SendMessage, 0x114, 0, 0, %fcontrol%, A
-Return
+; ì‹œí”„íŠ¸ + íœ ì—…
++WheelUp:: {
+    ; ì™¼ìª½ìœ¼ë¡œ ìŠ¤í¬ë¡¤
+    fcontrol := ControlGetFocus("A")
+    SendMessage(0x114, 0, 0, fcontrol, "A")
+}
 
-; ½ÃÇÁÆ® + ÈÙ´Ù¿î
-+WheelDown::
-    ; ¿À¸¥ÂÊÀ¸·Î ½ºÅ©·Ñ
-    ControlGetFocus, fcontrol, A
-    SendMessage, 0x114, 1, 0, %fcontrol%, A
-Return
+; ì‹œí”„íŠ¸ + íœ ë‹¤ìš´
++WheelDown:: {
+    ; ì˜¤ë¥¸ìª½ìœ¼ë¡œ ìŠ¤í¬ë¡¤
+    fcontrol := ControlGetFocus("A")
+    SendMessage(0x114, 1, 0, fcontrol, "A")
+}
 
-; À©µµ¿ìÅ° + ÈÙ¾÷
-#WheelUp::
-    SoundSet, +5
-    SoundGet, volume
-    volume := Round(volume)
-    Progress, %volume%, %volume%
-    Progress, Show
-    SetTimer, ProgressHide, -1000
-Return
+; ìœˆë„ìš°í‚¤ + íœ ì—…
+#WheelUp:: {
+    SoundSetVolume "+5"
+}
 
-; À©µµ¿ìÅ° + ÈÙ´Ù¿î
-#WheelDown::
-    SoundSet, -5
-    SoundGet, volume
-    volume := Round(volume)
-    Progress, %volume%, %volume%
-    Progress, Show
-    SetTimer, ProgressHide, -1000
-Return
+; ìœˆë„ìš°í‚¤ + íœ ë‹¤ìš´
+#WheelDown:: {
+    SoundSetVolume "-5"
+}
 
-ProgressHide:
-    Progress, b p%volume% r0-100 w200 Hide zh15 fs10 ws700, %volume%
-Return
+; ì»¨íŠ¸ë¡¤ + ì‹œí”„íŠ¸ + V
+^+v:: {
+    clip := ClipboardAll() ; í´ë¦½ë³´ë“œ ë‚´ìš© ë³´ê´€
+    A_Clipboard := A_Clipboard ; í´ë¦½ë³´ë“œì—ì„œ ì„œì‹ ì œê±°
+    Send "^v"
+    Sleep 100 ; ë”œë ˆì´ ì•ˆì£¼ë©´ ì´ìƒí•˜ê²Œ ì•ˆë¨..
+    A_Clipboard := clip ; ì›ë˜ í´ë¦½ë³´ë“œ ë‚´ìš© ë³µêµ¬
+    clip := "" ; ë©”ëª¨ë¦¬ í•´ì œ
+}
 
-; ÄÁÆ®·Ñ + ½ÃÇÁÆ® + V
-^+v::
-    clip := ClipboardAll ; Å¬¸³º¸µå ³»¿ë º¸°ü
-    clipboard := clipboard ; Å¬¸³º¸µå¿¡¼­ ¼­½Ä Á¦°Å
-    Send, ^v
-    Sleep, 100 ; µô·¹ÀÌ ¾ÈÁÖ¸é ÀÌ»óÇÏ°Ô ¾ÈµÊ..
-    clipboard := clip ; ¿ø·¡ Å¬¸³º¸µå ³»¿ë º¹±¸
-    clip := "" ; ¸Ş¸ğ¸® ÇØÁ¦
-Return
+; ì»¨íŠ¸ë¡¤ + ì•ŒíŠ¸ + V
+^!v:: {
+    Send A_Clipboard
+}
 
-; ÄÁÆ®·Ñ + ¾ËÆ® + V
-^!v::
-    Send, %clipboard%
-Return
+; ì»¨íŠ¸ë¡¤ + ì‹œí”„íŠ¸ + ì•ŒíŠ¸ + 1
+^+!1:: {
+    ; í—¤ë“œì…‹
+    SwitchSound("ìŠ¤í”¼ì»¤")
+}
 
-; ÄÁÆ®·Ñ + ½ÃÇÁÆ® + ¾ËÆ® + 1
-^+!1::
-    ; Çìµå¼Â
-    SwitchSound("½ºÇÇÄ¿")
-Return
-
-; ÄÁÆ®·Ñ + ½ÃÇÁÆ® + ¾ËÆ® + 2
-^+!2::
-    ; ¸ğ´ÏÅÍ
+; ì»¨íŠ¸ë¡¤ + ì‹œí”„íŠ¸ + ì•ŒíŠ¸ + 2
+^+!2:: {
+    ; ëª¨ë‹ˆí„°
     SwitchSound("2477W1M")
-Return
+}
 
-; ÄÁÆ®·Ñ + ½ÃÇÁÆ® + ¾ËÆ® + 3
-^+!3::
-    ; ÀÌ¾îÆù(Àü¸éÀè)
-    SwitchSound("½ºÇÇÄ¿")
-Return
+; ì»¨íŠ¸ë¡¤ + ì‹œí”„íŠ¸ + ì•ŒíŠ¸ + 3
+^+!3:: {
+    ; ì´ì–´í°(ì „ë©´ì­)
+    SwitchSound("Realtek Digital Output")
+}
 
-; ÄÁÆ®·Ñ + ¾ËÆ® + ½ºÆäÀÌ½º
-^!Space::
-    clip := ClipboardAll ; Å¬¸³º¸µå ³»¿ë º¸°ü
-    Send, ^c
-    If (IME_CHECK("A") == 0) ; IME°¡ ¿µ¹®ÀÌ¸é ÇÑ±Û·Î º¯°æ
-        Send, {vk15sc138}
-    Send, %clipboard%
-    Sleep, 100
-    clipboard := clip ; ¿ø·¡ Å¬¸³º¸µå ³»¿ë º¹±¸
-    clip := "" ; ¸Ş¸ğ¸® ÇØÁ¦
-Return
+; ì»¨íŠ¸ë¡¤ + ì•ŒíŠ¸ + ìŠ¤í˜ì´ìŠ¤
+^!Space:: {
+    clip := ClipboardAll() ; í´ë¦½ë³´ë“œ ë‚´ìš© ë³´ê´€
+    Send "^c"
+    If (IME_CHECK("A") == 0) { ; IMEê°€ ì˜ë¬¸ì´ë©´ í•œê¸€ë¡œ ë³€ê²½
+        Send "{vk15sc138}"
+    }
+    Send A_Clipboard
+    Sleep 100
+    A_Clipboard := clip ; ì›ë˜ í´ë¦½ë³´ë“œ ë‚´ìš© ë³µêµ¬
+    clip := "" ; ë©”ëª¨ë¦¬ í•´ì œ
+}
 
-; ÇÖ½ºÆ®¸µ
+; í•«ìŠ¤íŠ¸ë§
 #Hotstring *?
-::\->::¡æ
-::\<-::¡ç
-::\up::¡è
-::\down::¡é
-::\<>::¡ê
-::\star::¡Ú
-::\r::¢ç
-::\wn::¢ß
+::\->::â†’
+::\<-::â†
+::\up::â†‘
+::\down::â†“
+::\<>::â†”
+::\star::â˜…
+::\r::Â®
+::\wn::ãˆœ
 
-; ¸¶¿ì½º °¡µÎ´Â ÇÔ¼ö
-ClipCursor(x1, y1, x2, y2)
-{
-    VarSetCapacity(rect, 16, 0)
+; ë§ˆìš°ìŠ¤ ê°€ë‘ëŠ” í•¨ìˆ˜
+ClipCursor(x1, y1, x2, y2) {
+    rect := Buffer(16)
     args := x1 . "|" . y1 . "|" . x2 . "|" . y2
-    Loop, Parse, args, |
-        NumPut(A_LoopField, &rect, (a_index - 1) * 4)
-    DllCall("ClipCursor", "Str", rect)
+    Loop Parse, args, "|" {
+        NumPut "Int", A_LoopField, rect, (A_Index - 1) * 4
+    }
+    DllCall("ClipCursor", "Ptr", rect)
 }
 
-; Ãâ·Â ÀåÄ¡ º¯°æ ÇÔ¼ö
-SwitchSound(device)
-{
-    TrayTip ; ÀÌÀü ¸Ş½ÃÁö´Â Áö¿ì°í
-    RunWait, "nircmd.exe" setdefaultsounddevice "%device%", , Hide
-    SoundGet, volume
+; ì¶œë ¥ ì¥ì¹˜ ë³€ê²½ í•¨ìˆ˜
+SwitchSound(device) {
+    TrayTip ; ì´ì „ ë©”ì‹œì§€ëŠ” ì§€ìš°ê³ 
+    RunWait('"nircmd.exe" setdefaultsounddevice ' . device, , "Hide")
+    volume := SoundGetVolume()
     volume := Round(volume)
-    TrayTip, , %device% : %volume%
+    TrayTip , device . " : " . volume
 }
 
-; IME »óÅÂ ¾Ë¾Æ³»´Â ÇÔ¼ö. ¿µ¾î¸é 0À» ¹İÈ¯
-IME_CHECK(winTitle)
-{
-    WinGet, hWnd, ID, %winTitle%
-    defaultIMEWnd := DllCall("imm32\ImmGetDefaultIMEWnd", Uint, hWnd, Uint)
+; IME ìƒíƒœ ì•Œì•„ë‚´ëŠ” í•¨ìˆ˜. ì˜ì–´ë©´ 0ì„ ë°˜í™˜
+; ìƒˆ IMEë¡œ ë°”ë€Œê³  ì‘ë™ ì•ˆí•¨
+IME_CHECK(winTitle) {
+    hWnd := WinGetID(winTitle)
+    defaultIMEWnd := DllCall("imm32\ImmGetDefaultIMEWnd", "Uint", hWnd, "Uint")
     detectSave := A_DetectHiddenWindows
-    DetectHiddenWindows, ON
-    SendMessage, 0x283, 0x005, "", , ahk_id %defaultIMEWnd%
-    If (detectSave != A_DetectHiddenWindows)
-        DetectHiddenWindows, %detectSave%
-Return ErrorLevel
+    DetectHiddenWindows True
+    result := SendMessage(0x283, 0x005, "", , "ahk_id " . defaultIMEWnd)
+    If (detectSave !== A_DetectHiddenWindows) {
+        DetectHiddenWindows detectSave
+    }
+    Return result
 }
