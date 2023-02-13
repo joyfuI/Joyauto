@@ -116,14 +116,22 @@ Pause:: Mouse
 +WheelUp:: {
     ; 왼쪽으로 스크롤
     fcontrol := ControlGetFocus("A")
-    SendMessage(0x114, 0, 0, fcontrol, "A")
+    If (fcontrol) {
+        SendMessage(0x114, 0, 0, fcontrol, "A")
+    } Else {
+        Send "+{WheelUp}"
+    }
 }
 
 ; 시프트 + 휠다운
 +WheelDown:: {
     ; 오른쪽으로 스크롤
     fcontrol := ControlGetFocus("A")
-    SendMessage(0x114, 1, 0, fcontrol, "A")
+    If (fcontrol) {
+        SendMessage(0x114, 1, 0, fcontrol, "A")
+    } Else {
+        Send "+{WheelDown}"
+    }
 }
 
 ; 윈도우키 + 휠업
