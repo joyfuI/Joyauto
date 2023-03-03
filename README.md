@@ -9,7 +9,6 @@
 - **Ctrl+윈도우키+↑/↓** : 포커스된 창을 투명하게, 투명도 조절
 - **Shift+WheelUp/WheelDoWn** : 좌우 스크롤
 - **윈도우키+WheelUp/WheelDoWn** : 볼륨 조절
-- **Ctrl+Shift+V** : 텍스트만 붙여넣기
 - **Ctrl+Alt+V** : 붙여넣기가 안 먹히는 곳에 붙여넣기
 - **Ctrl+Shift+Alt+1** : 재생장치를 헤드셋으로 변경
 - **Ctrl+Shift+Alt+2** : 재생장치를 모니터으로 변경

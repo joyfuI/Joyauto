@@ -144,16 +144,6 @@ Pause:: Mouse
     SoundSetVolume "-5"
 }
 
-; 컨트롤 + 시프트 + V
-^+v:: {
-    clip := ClipboardAll() ; 클립보드 내용 보관
-    A_Clipboard := A_Clipboard ; 클립보드에서 서식 제거
-    Send "^v"
-    Sleep 100 ; 딜레이 안주면 이상하게 안됨..
-    A_Clipboard := clip ; 원래 클립보드 내용 복구
-    clip := "" ; 메모리 해제
-}
-
 ; 컨트롤 + 알트 + V
 ^!v:: {
     Send A_Clipboard
