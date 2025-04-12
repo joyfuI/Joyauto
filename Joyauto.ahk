@@ -15,25 +15,25 @@ tray.add("종료", Close)
 tray.Default := "마우스 가두기"
 tray.ClickCount := 1
 
-Try {
+try {
     ; 자동실행 레지스트리가 있는지 확인
     reg := RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run", "Joyauto")
-    If (reg == A_ScriptFullPath) {
+    if (reg == A_ScriptFullPath) {
         tray.Check("부팅 시 자동 실행")
     }
 }
 
 ; 기본 재생장치 설정
-Run '"nircmd.exe" setdefaultsounddevice "스피커"', , "Hide"
-Return
+SwitchSound("헤드셋")
+return
 
 Mouse(*) {
     static toggle := False
     tray.ToggleCheck("마우스 가두기")
-    If (toggle) {
+    if (toggle) {
         SetTimer Cursor, 0
         DllCall("ClipCursor", "Int", 0)
-    } Else {
+    } else {
         SetTimer Cursor
     }
     toggle := !toggle
@@ -47,9 +47,9 @@ Cursor(*) {
 Laptop(*) {
     static toggle := False
     tray.ToggleCheck("노트북 한영키")
-    If (toggle) {
+    if (toggle) {
         Hotkey "RAlt", Ralt, "Off"
-    } Else {
+    } else {
         Hotkey "RAlt", Ralt, "On"
     }
     toggle := !toggle
@@ -65,16 +65,18 @@ Steam(*) {
 
 Autorun(*) {
     tray.ToggleCheck("부팅 시 자동 실행")
-    Try {
+    try {
         ; 자동실행 레지스트리가 있는지 확인
         reg := RegRead("HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run", "Joyauto")
-        If (reg == A_ScriptFullPath) {
+        if (reg == A_ScriptFullPath) {
             RegDelete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run", "Joyauto"
-        } Else {
-            RegWrite A_ScriptFullPath, "REG_SZ", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run", "Joyauto"
+        } else {
+            RegWrite A_ScriptFullPath, "REG_SZ", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run",
+                "Joyauto"
         }
-    } Catch {
-        RegWrite A_ScriptFullPath, "REG_SZ", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run", "Joyauto"
+    } catch {
+        RegWrite A_ScriptFullPath, "REG_SZ", "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run",
+            "Joyauto"
     }
 }
 
@@ -88,13 +90,13 @@ Pause:: Mouse
 ; 컨트롤 + 윈도우키 + ↑
 ^#Up:: {
     trans := WinGetTransparent("A") ; 투명도 알아내기
-    If (!trans) {
-        Return
+    if (!trans) {
+        return
     }
     trans += 10
-    If (trans >= 255) {
+    if (trans >= 255) {
         WinSetTransparent "Off", "A" ; 투명창 끄기. 투명도를 255로 지정해도 불투명하나 그러면 투명창으로 인식하기 때문에 성능이 하락함.
-    } Else {
+    } else {
         WinSetTransparent trans, "A" ; 포커스된 창을 투명하게
     }
 }
@@ -102,12 +104,12 @@ Pause:: Mouse
 ; 컨트롤 + 윈도우키 + ↓
 ^#Down:: {
     trans := WinGetTransparent("A")
-    If (!trans) {
+    if (!trans) {
         trans := 255
     }
     trans -= 10
-    If (trans <= 0) {
-        Return
+    if (trans <= 0) {
+        return
     }
     WinSetTransparent trans, "A"
 }
@@ -116,9 +118,9 @@ Pause:: Mouse
 +WheelUp:: {
     ; 왼쪽으로 스크롤
     fcontrol := ControlGetFocus("A")
-    If (fcontrol) {
+    if (fcontrol) {
         SendMessage(0x114, 0, 0, fcontrol, "A")
-    } Else {
+    } else {
         Send "+{WheelUp}"
     }
 }
@@ -127,9 +129,9 @@ Pause:: Mouse
 +WheelDown:: {
     ; 오른쪽으로 스크롤
     fcontrol := ControlGetFocus("A")
-    If (fcontrol) {
+    if (fcontrol) {
         SendMessage(0x114, 1, 0, fcontrol, "A")
-    } Else {
+    } else {
         Send "+{WheelDown}"
     }
 }
@@ -151,27 +153,24 @@ Pause:: Mouse
 
 ; 컨트롤 + 시프트 + 알트 + 1
 ^+!1:: {
-    ; 헤드셋
-    SwitchSound("스피커")
+    SwitchSound("헤드셋")
 }
 
 ; 컨트롤 + 시프트 + 알트 + 2
 ^+!2:: {
-    ; 모니터
-    SwitchSound("2477W1M")
+    SwitchSound("모니터")
 }
 
 ; 컨트롤 + 시프트 + 알트 + 3
 ^+!3:: {
-    ; 이어폰(전면잭)
-    SwitchSound("Realtek Digital Output")
+    SwitchSound("스피커")
 }
 
 ; 컨트롤 + 알트 + 스페이스
 ^!Space:: {
     clip := ClipboardAll() ; 클립보드 내용 보관
     Send "^c"
-    If (IME_CHECK("A") == 0) { ; IME가 영문이면 한글로 변경
+    if (IME_CHECK("A") == 0) { ; IME가 영문이면 한글로 변경
         Send "{vk15sc138}"
     }
     Send A_Clipboard
@@ -195,7 +194,7 @@ Pause:: Mouse
 ClipCursor(x1, y1, x2, y2) {
     rect := Buffer(16)
     args := x1 . "|" . y1 . "|" . x2 . "|" . y2
-    Loop Parse, args, "|" {
+    loop parse, args, "|" {
         NumPut "Int", A_LoopField, rect, (A_Index - 1) * 4
     }
     DllCall("ClipCursor", "Ptr", rect)
@@ -218,8 +217,8 @@ IME_CHECK(winTitle) {
     detectSave := A_DetectHiddenWindows
     DetectHiddenWindows True
     result := SendMessage(0x283, 0x005, "", , "ahk_id " . defaultIMEWnd)
-    If (detectSave !== A_DetectHiddenWindows) {
+    if (detectSave !== A_DetectHiddenWindows) {
         DetectHiddenWindows detectSave
     }
-    Return result
+    return result
 }
