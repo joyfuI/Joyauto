@@ -84,9 +84,11 @@ Close(*) {
     ExitApp
 }
 
-; Pause 키에 마우스 가두기 단축키 지정
+; 마우스 가두기 단축키
+; Pause
 Pause:: Mouse
 
+; 현재창 점점 불투명하게
 ; 컨트롤 + 윈도우키 + ↑
 ^#Up:: {
     trans := WinGetTransparent("A") ; 투명도 알아내기
@@ -101,6 +103,7 @@ Pause:: Mouse
     }
 }
 
+; 현재창 점점 투명하게
 ; 컨트롤 + 윈도우키 + ↓
 ^#Down:: {
     trans := WinGetTransparent("A")
@@ -114,9 +117,9 @@ Pause:: Mouse
     WinSetTransparent trans, "A"
 }
 
+; 왼쪽으로 스크롤
 ; 시프트 + 휠업
 +WheelUp:: {
-    ; 왼쪽으로 스크롤
     fcontrol := ControlGetFocus("A")
     if (fcontrol) {
         SendMessage(0x114, 0, 0, fcontrol, "A")
@@ -125,9 +128,9 @@ Pause:: Mouse
     }
 }
 
+; 오른쪽으로 스크롤
 ; 시프트 + 휠다운
 +WheelDown:: {
-    ; 오른쪽으로 스크롤
     fcontrol := ControlGetFocus("A")
     if (fcontrol) {
         SendMessage(0x114, 1, 0, fcontrol, "A")
@@ -136,16 +139,19 @@ Pause:: Mouse
     }
 }
 
+; 볼륨 +5
 ; 윈도우키 + 휠업
 #WheelUp:: {
     SoundSetVolume "+5"
 }
 
+; 볼륨 -5
 ; 윈도우키 + 휠다운
 #WheelDown:: {
     SoundSetVolume "-5"
 }
 
+; 서식없이 붙여넣기
 ; 컨트롤 + 알트 + V
 ^!v:: {
     Send A_Clipboard
@@ -166,6 +172,7 @@ Pause:: Mouse
     SwitchSound("스피커")
 }
 
+; 블록지정한 영타를 한타로 변경
 ; 컨트롤 + 알트 + 스페이스
 ^!Space:: {
     clip := ClipboardAll() ; 클립보드 내용 보관
@@ -177,6 +184,16 @@ Pause:: Mouse
     Sleep 100
     A_Clipboard := clip ; 원래 클립보드 내용 복구
     clip := "" ; 메모리 해제
+}
+
+; 커서 밑 텍스트 복사 (잘 안됨)
+; 시프트 + 휠클릭
++MButton:: {
+    MouseGetPos , , , &fcontrol, 2
+    if (fcontrol) {
+        text := ControlGetText(fcontrol)
+        A_Clipboard := text
+    }
 }
 
 ; 핫스트링
