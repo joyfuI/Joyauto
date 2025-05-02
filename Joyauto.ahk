@@ -219,11 +219,13 @@ ClipCursor(x1, y1, x2, y2) {
 
 ; 출력 장치 변경 함수
 SwitchSound(device) {
-    TrayTip ; 이전 메시지는 지우고
-    RunWait('"nircmd.exe" setdefaultsounddevice ' . device, , "Hide")
-    volume := SoundGetVolume()
-    volume := Round(volume)
-    TrayTip , device . " : " . volume
+    try {
+        TrayTip ; 이전 메시지는 지우고
+        RunWait('"nircmd.exe" setdefaultsounddevice ' . device, , "Hide")
+        volume := SoundGetVolume()
+        volume := Round(volume)
+        TrayTip , device . " : " . volume
+    }
 }
 
 ; IME 상태 알아내는 함수. 영어면 0을 반환
