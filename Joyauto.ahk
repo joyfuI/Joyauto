@@ -139,16 +139,16 @@ Pause:: Mouse
     }
 }
 
-; 볼륨 +5
+; 볼륨 +2
 ; 윈도우키 + 휠업
 #WheelUp:: {
-    SoundSetVolume "+5"
+    Send "{Volume_Up}"
 }
 
-; 볼륨 -5
+; 볼륨 -2
 ; 윈도우키 + 휠다운
 #WheelDown:: {
-    SoundSetVolume "-5"
+    Send "{Volume_Down}"
 }
 
 ; 서식없이 붙여넣기
