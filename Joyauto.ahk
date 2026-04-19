@@ -7,6 +7,7 @@ SetWorkingDir A_ScriptDir
 tray := A_TrayMenu
 tray.delete()
 tray.add("마우스 가두기", Mouse)
+tray.add("모니터 끄기", Monitor)
 tray.add("노트북 한영키", Laptop)
 tray.add("스팀 선호도 설정", Steam)
 tray.add()
@@ -42,6 +43,10 @@ Mouse(*) {
 Cursor(*) {
     ; 해상도 크기만큼 마우스 가두기
     ClipCursor(0, 0, A_ScreenWidth, A_ScreenHeight)
+}
+
+Monitor(*) {
+    Run '"nircmd.exe" monitor off', , "Hide"
 }
 
 Laptop(*) {
